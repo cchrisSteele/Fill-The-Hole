@@ -42,13 +42,8 @@ Hosted on Turso.
 
 
 # Hardware
-TBD
+Raspberry PI 4 model B, using a mpu 6050 modual for gyroscope and accelerometer mesurements.
 
 Shock - Baseline = Real Shock Data
 
 Calibration Period is to find a Shock baseline
-
-
-# Setup instructions
-
-TBD
