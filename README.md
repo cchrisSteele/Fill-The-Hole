@@ -51,6 +51,8 @@ Shock - Baseline = Real Shock Data
 
 Calibration Period is to find a Shock baseline
 
+The Hardware.py code in the Hardware dir is the translator for the mpu6050 fr the raspberry pi
+
 <img width="414" height="606" alt="image" src="https://github.com/user-attachments/assets/261e492d-86ed-48d1-8dcd-3de4b1dffadb" />
 
 Pythong Code for the raspberry pi to detect impact: 
