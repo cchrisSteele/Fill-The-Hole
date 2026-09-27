@@ -169,7 +169,7 @@ export default function CreatePothole({
                 <h2 id="create-pothole-title">Did you just hit a pothole?</h2>
                 <p className="create-pothole__description">
                   {manualLocation
-                    ? `Report a pothole at ${manualLocation.latitude.toFixed(5)}, ${manualLocation.longitude.toFixed(5)}?`
+                    ? `Report a pothole at ${manualLocation.latitude.toFixed(5)}, ${manualLocation.longitude.toFixed(5)}${Number.isFinite(manualLocation.accuracy) ? ` (device accuracy ±${Math.round(manualLocation.accuracy)} m)` : ""}?`
                     : "Confirm to add the road hazard to the map."}
                 </p>
                 <div className="create-pothole__actions">

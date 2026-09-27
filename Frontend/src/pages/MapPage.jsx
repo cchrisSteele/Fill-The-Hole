@@ -55,6 +55,7 @@ export default function MapPage() {
   const [query, setQuery] = useState("");
   const [mapTarget, setMapTarget] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
   const [error, setError] = useState("");
   const [potholes, setPotholes] = useState([]);
   const [potholesError, setPotholesError] = useState("");
@@ -177,6 +178,41 @@ export default function MapPage() {
     }
   }
 
+  function locateDevice() {
+    if (!navigator.geolocation) {
+      setError("This browser does not support device location.");
+      return;
+    }
+
+    setIsLocating(true);
+    setError("");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        startReportAtMapLocation({
+          latitude,
+          longitude,
+          accuracy,
+          address: "Current device location",
+        });
+        setIsLocating(false);
+      },
+      (locationError) => {
+        const messageByCode = {
+          1: "Location permission was denied. Allow location access in your browser and try again.",
+          2: "Your device could not determine its location. Try again or choose a point on the map.",
+          3: "Finding your location timed out. Try again or choose a point on the map.",
+        };
+        setError(
+          messageByCode[locationError.code]
+          || "Could not get your device location. Try again or choose a point on the map."
+        );
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+    );
+  }
+
   function addPothole(pothole) {
     setPotholes((current) => [pothole, ...current.filter((item) => Number(item.uid) !== pothole.uid)]);
     setPotholesError("");
@@ -218,6 +254,14 @@ export default function MapPage() {
         <div className="map-search-row">
           <input id="map-search-input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Address, city, or ZIP code" />
           <button type="submit" disabled={loading}>{loading ? "Searching…" : "Search"}</button>
+          <button
+            className="map-search__location-button"
+            type="button"
+            onClick={locateDevice}
+            disabled={isLocating}
+          >
+            {isLocating ? "Finding location…" : "Use my location"}
+          </button>
         </div>
         {error && <p className="map-search-error" role="alert">{error}</p>}
       </form>
@@ -252,6 +296,9 @@ export default function MapPage() {
                   Coordinates: {manualLocation.latitude.toFixed(5)},{" "}
                   {manualLocation.longitude.toFixed(5)}
                 </span>
+                {Number.isFinite(manualLocation.accuracy) && (
+                  <span>Device accuracy: ±{Math.round(manualLocation.accuracy)} m</span>
+                )}
               </div>
             </Popup>
           </Marker>
