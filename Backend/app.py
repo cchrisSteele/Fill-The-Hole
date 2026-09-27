@@ -1,43 +1,92 @@
-# app.py
 import json
 import os
 import sqlite3
 from pathlib import Path
 from urllib.request import Request, urlopen
-from dotenv import load_dotenv
-load_dotenv()
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 
+load_dotenv()
 app = Flask(__name__)
+
+SQL_DIR = Path(__file__).parent
+
 
 @app.get("/api/health")
 def health():
     return jsonify(status="ok"), 200
 
+
 @app.post("/api/admin/create-schema")
 def create_schema():
-    check_key = request.headers.get("X-Admin-Key")
-    if not check_db_creds(check_key):
-        return jsonify({"error": "Unauthorized"}), 401
+    # check creds
+    if not check_db_creds(request.headers.get("X-Admin-Key")):
+        return jsonify(error="Unauthorized"), 401
 
-    schema = Path(__file__).with_name("schema.sql").read_text(encoding="utf-8")
+    return run_sql_file("schema.sql")
 
+
+# Helper functions
+
+def run_sql_file(filename):
+    try:
+        statements = read_sql_statements(filename)
+        result = execute_sql(statements)
+    except (FileNotFoundError, ValueError, KeyError) as exc:
+        return jsonify(error=str(exc)), 500
+
+    errors = [
+        item for item in result["results"]
+        if item["type"] == "error"
+    ]
+    if errors:
+        return jsonify(error="Schema creation failed", details=errors), 500
+
+    return jsonify(message="Schema created successfully"), 200
+
+def check_db_creds(key):
+    admin_key = os.environ.get("ADMIN_KEY")
+    return bool(admin_key) and key == admin_key
+
+
+def read_sql_statements(filename):
+    """Read and split a trusted SQL file into complete statements."""
+    sql = (SQL_DIR / filename).read_text(encoding="utf-8")
     statements = []
     current = ""
-    for line in schema.splitlines(keepends=True):
+
+    for line in sql.splitlines(keepends=True):
         current += line
+
         if sqlite3.complete_statement(current):
-            if current.strip():
-                statements.append(current)
+            # Ignore chunks containing only comments or whitespace.
+            statement = "\n".join(
+                part for part in current.splitlines()
+                if part.strip() and not part.lstrip().startswith("--")
+            ).strip()
+
+            if statement:
+                statements.append(statement)
+
             current = ""
 
-    if current.strip():
-        return jsonify({"error": "Incomplete statement in schema.sql"}), 500
+    # A file can end with comments after its last SQL statement.
+    remaining = "\n".join(
+        part for part in current.splitlines()
+        if part.strip() and not part.lstrip().startswith("--")
+    ).strip()
+    if remaining:
+        raise ValueError(f"Incomplete statement in {filename}")
 
+    return statements
+
+
+def execute_sql(statements):
+    """Run SQL statements through Turso's HTTP pipeline."""
     database_url = os.environ["TURSO_DATABASE_URL"]
-    http_url = database_url.replace("libsql://", "https://").replace(
-        "turso://", "https://"
+    http_url = database_url.replace("libsql://", "https://", 1).replace(
+        "turso://", "https://", 1
     ).rstrip("/")
 
     payload = {
@@ -46,6 +95,7 @@ def create_schema():
             {"type": "close"},
         ]
     }
+
     turso_request = Request(
         f"{http_url}/v2/pipeline",
         data=json.dumps(payload).encode("utf-8"),
@@ -57,25 +107,8 @@ def create_schema():
     )
 
     with urlopen(turso_request, timeout=20) as response:
-        result = json.load(response)
+        return json.load(response)
 
-    errors = [item for item in result["results"] if item["type"] == "error"]
-    if errors:
-        return jsonify({"error": "Schema creation failed", "details": errors}), 500
-
-    return jsonify({"message": "Schema created successfully"}), 200
-
-
-
-# Helper Fucntions
-
-def check_db_creds(key):
-    admin_key = os.environ.get("ADMIN_KEY")
-    if not key or key != admin_key:
-        return False
-
-    else:
-        return True
 
 if __name__ == "__main__":
     app.run(debug=True)
