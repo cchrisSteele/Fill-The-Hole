@@ -186,15 +186,23 @@
   opacity: 0.65;
 }
 
-.pothole-droplet-icon {
+.pothole-marker-icon {
   border: 0;
   background: transparent;
 }
 
+.pothole-marker {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 52px;
+}
+
 .pothole-droplet {
   position: absolute;
-  top: 3px;
-  left: 4px;
+  top: 14px;
+  left: 6px;
+  z-index: 1;
   display: grid;
   width: 30px;
   height: 30px;
@@ -204,6 +212,7 @@
   background: #2255a4;
   box-shadow: 0 2px 7px rgb(8 6 13 / 35%);
   transform: rotate(-45deg);
+  transition: background-color 160ms ease, box-shadow 160ms ease;
 }
 
 .pothole-droplet__center {
@@ -211,7 +220,58 @@
   height: 8px;
   border: 2px solid #fff;
   border-radius: 50%;
+  background: #fff;
+}
+
+.pothole-marker--preview .pothole-droplet {
+  background: #2255a4;
+}
+
+.pothole-marker--severity-0 .pothole-droplet {
+  background: #16a34a;
+}
+
+.pothole-marker--severity-1 .pothole-droplet {
+  background: #eab308;
+}
+
+.pothole-marker--severity-2 .pothole-droplet {
+  background: #fb923c;
+}
+
+.pothole-marker--severity-3 .pothole-droplet {
+  background: #b91c1c;
+  box-shadow: 0 2px 8px rgb(127 29 29 / 55%);
+}
+
+.pothole-marker--severity-3 .pothole-droplet__center {
   background: #facc15;
+}
+
+.pothole-marker__flame {
+  position: absolute;
+  top: 11px;
+  left: 3px;
+  z-index: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(145deg, #fff7ae 4%, #facc15 30%, #f97316 64%, #dc2626 100%);
+  filter: blur(1px);
+  transform: rotate(-45deg) scale(1.2);
+  transform-origin: center;
+  animation: pothole-flame-flicker 850ms ease-in-out infinite alternate;
+}
+
+@keyframes pothole-flame-flicker {
+  from { transform: rotate(-45deg) scale(1.16); }
+  to { transform: rotate(-45deg) scale(1.24); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pothole-marker__flame {
+    animation: none;
+  }
 }
 
 .pothole-popup {

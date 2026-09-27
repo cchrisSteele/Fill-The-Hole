@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { divIcon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -6,14 +6,27 @@ import CreatePothole from "../components/CreatePothole.jsx";
 import "./MapPage.css";
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/+$/, "");
+const SEVERITY_LABELS = ["Low", "Medium", "High", "Imminent Destruction"];
 
-const potholeIcon = divIcon({
-  className: "pothole-droplet-icon",
-  html: '<span class="pothole-droplet"><span class="pothole-droplet__center"></span></span>',
-  iconSize: [38, 46],
-  iconAnchor: [19, 44],
-  popupAnchor: [0, -42],
-});
+function createPotholeIcon(severity) {
+  const severityClass = severity >= 0 && severity <= 3
+    ? `pothole-marker--severity-${severity}`
+    : "pothole-marker--preview";
+  const flame = severity === 3
+    ? '<span class="pothole-marker__flame" aria-hidden="true"></span>'
+    : "";
+
+  return divIcon({
+    className: "pothole-marker-icon",
+    html: `<span class="pothole-marker ${severityClass}"><span class="pothole-droplet"><span class="pothole-droplet__center"></span></span>${flame}</span>`,
+    iconSize: [42, 52],
+    iconAnchor: [21, 50],
+    popupAnchor: [0, -48],
+  });
+}
+
+const potholeIcons = SEVERITY_LABELS.map((_, severity) => createPotholeIcon(severity));
+const previewIcon = createPotholeIcon(-1);
 
 function FlyToResult({ result }) {
   const map = useMap();
@@ -40,8 +53,6 @@ function MapLocationPicker({ enabled, onSelect, onDirectReport }) {
   return null;
 }
 
-const SEVERITY_LABELS = ["Low", "Medium", "High", "Imminent Destruction"];
-
 function formatIncidentTime(value) {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return "Time unavailable";
@@ -49,6 +60,108 @@ function formatIncidentTime(value) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
+}
+
+function formatAddress(properties) {
+  const street = [properties.housenumber, properties.street].filter(Boolean).join(" ");
+  const locality = properties.city
+    || properties.town
+    || properties.village
+    || properties.locality
+    || properties.district
+    || properties.county;
+  const addressParts = [
+    street || properties.name,
+    locality,
+    properties.state,
+    properties.postcode,
+    properties.country,
+  ].filter(Boolean);
+
+  return [...new Set(addressParts)].join(", ");
+}
+
+function PotholeMarker({ pothole }) {
+  const [address, setAddress] = useState("");
+  const [isLoadingAddress, setIsLoadingAddress] = useState(false);
+  const [addressError, setAddressError] = useState("");
+  const lookupStarted = useRef(false);
+  const severity = Number(pothole.severity);
+  const severityLabel = SEVERITY_LABELS[severity] || "Unknown";
+  const latitude = Number(pothole.latitude);
+  const longitude = Number(pothole.longitude);
+
+  async function loadAddress() {
+    if (lookupStarted.current) return;
+    lookupStarted.current = true;
+    setIsLoadingAddress(true);
+    setAddressError("");
+
+    try {
+      const response = await fetch(
+        `https://photon.komoot.io/reverse?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}`,
+        { headers: { Accept: "application/json" } }
+      );
+      if (!response.ok) {
+        throw new Error(`Address lookup failed (HTTP ${response.status}).`);
+      }
+
+      const result = await response.json();
+      const place = result.features?.[0];
+      const formattedAddress = place ? formatAddress(place.properties || {}) : "";
+      if (!formattedAddress) {
+        throw new Error("No address was found for this location.");
+      }
+
+      setAddress(formattedAddress);
+    } catch (lookupError) {
+      setAddressError(lookupError.message || "Address lookup failed.");
+    } finally {
+      setIsLoadingAddress(false);
+    }
+  }
+
+  return (
+    <Marker
+      position={[latitude, longitude]}
+      icon={potholeIcons[severity] || previewIcon}
+      eventHandlers={{ popupopen: loadAddress }}
+    >
+      <Popup>
+        <div className="pothole-popup">
+          <div className="pothole-popup__header">
+            <strong>Pothole report</strong>
+            <span className="pothole-popup__severity">Severity {severity} · {severityLabel}</span>
+          </div>
+          <div className="pothole-popup__details">
+            <div className="pothole-popup__detail">
+              <span className="pothole-popup__label">Address</span>
+              <span className="pothole-popup__value">
+                {address || (isLoadingAddress ? "Finding address…" : "Address unavailable")}
+              </span>
+            </div>
+            {addressError && (
+              <span className="pothole-popup__error" role="status">
+                {addressError} Coordinates are shown below.
+              </span>
+            )}
+            <div className="pothole-popup__detail">
+              <span className="pothole-popup__label">Coordinates</span>
+              <span className="pothole-popup__value pothole-popup__coordinates">
+                {latitude.toFixed(5)}, {longitude.toFixed(5)}
+              </span>
+            </div>
+            <div className="pothole-popup__detail">
+              <span className="pothole-popup__label">Reported</span>
+              <span className="pothole-popup__value">
+                {formatIncidentTime(pothole.recorded_at)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </Popup>
+    </Marker>
+  );
 }
 
 export default function MapPage() {
@@ -62,7 +175,6 @@ export default function MapPage() {
   const [isPickingLocation, setIsPickingLocation] = useState(false);
   const [manualLocation, setManualLocation] = useState(null);
   const [mapReportRequestId, setMapReportRequestId] = useState(0);
-  const [addressByPothole, setAddressByPothole] = useState({});
 
   useEffect(() => {
     let isCurrent = true;
@@ -97,41 +209,6 @@ export default function MapPage() {
       isCurrent = false;
     };
   }, []);
-
-  useEffect(() => {
-    const potholesToLocate = potholes.filter(
-      (pothole) => pothole.uid && !addressByPothole[pothole.uid]
-    );
-    if (!potholesToLocate.length) return undefined;
-
-    let isCurrent = true;
-    async function loadAddresses() {
-      const addresses = {};
-      for (const pothole of potholesToLocate) {
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
-              pothole.latitude
-            )}&lon=${encodeURIComponent(pothole.longitude)}`,
-            { headers: { Accept: "application/json" } }
-          );
-          if (!response.ok) continue;
-          const place = await response.json();
-          if (place.display_name) addresses[pothole.uid] = place.display_name;
-        } catch {
-          // The popup falls back to coordinates when address lookup is unavailable.
-        }
-      }
-      if (isCurrent && Object.keys(addresses).length) {
-        setAddressByPothole((current) => ({ ...current, ...addresses }));
-      }
-    }
-
-    loadAddresses();
-    return () => {
-      isCurrent = false;
-    };
-  }, [potholes, addressByPothole]);
 
   async function search(event) {
     event.preventDefault();
@@ -286,47 +363,39 @@ export default function MapPage() {
         {manualLocation && (
           <Marker
             position={[manualLocation.latitude, manualLocation.longitude]}
-            icon={potholeIcon}
+            icon={previewIcon}
           >
             <Popup>
               <div className="pothole-popup">
-                <strong>Selected pothole location</strong>
-                {manualLocation.address && <span>Address: {manualLocation.address}</span>}
-                <span>
-                  Coordinates: {manualLocation.latitude.toFixed(5)},{" "}
-                  {manualLocation.longitude.toFixed(5)}
-                </span>
+                <div className="pothole-popup__header">
+                  <strong>Selected location</strong>
+                </div>
+                <div className="pothole-popup__details">
+                  {manualLocation.address && (
+                    <div className="pothole-popup__detail">
+                      <span className="pothole-popup__label">Address</span>
+                      <span className="pothole-popup__value">{manualLocation.address}</span>
+                    </div>
+                  )}
+                  <div className="pothole-popup__detail">
+                    <span className="pothole-popup__label">Coordinates</span>
+                    <span className="pothole-popup__value pothole-popup__coordinates">
+                      {manualLocation.latitude.toFixed(5)}, {manualLocation.longitude.toFixed(5)}
+                    </span>
+                  </div>
+                </div>
                 {Number.isFinite(manualLocation.accuracy) && (
-                  <span>Device accuracy: ±{Math.round(manualLocation.accuracy)} m</span>
+                  <span className="pothole-popup__accuracy">
+                    Device accuracy ±{Math.round(manualLocation.accuracy)} m
+                  </span>
                 )}
               </div>
             </Popup>
           </Marker>
         )}
         {potholes.map((pothole) => {
-          const severity = Number(pothole.severity);
-          const severityLabel = SEVERITY_LABELS[severity] || "Unknown";
           return (
-            <Marker
-              key={pothole.uid}
-              position={[Number(pothole.latitude), Number(pothole.longitude)]}
-              icon={potholeIcon}
-            >
-              <Popup>
-                <div className="pothole-popup">
-                  <strong>Pothole report</strong>
-                  <span>
-                    Address: {addressByPothole[pothole.uid] || "Address lookup unavailable"}
-                  </span>
-                  <span>
-                    Coordinates: {Number(pothole.latitude).toFixed(5)},{" "}
-                    {Number(pothole.longitude).toFixed(5)}
-                  </span>
-                  <span>Date &amp; time: {formatIncidentTime(pothole.recorded_at)}</span>
-                  <span>Severity: {severity} - {severityLabel}</span>
-                </div>
-              </Popup>
-            </Marker>
+            <PotholeMarker key={pothole.uid} pothole={pothole} />
           );
         })}
       </MapContainer>
