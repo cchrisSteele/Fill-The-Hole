@@ -42,6 +42,8 @@ Sqlite database for pothole reccords.
 Hosted on Turso.
 
 
+
+
 # Hardware
 Raspberry PI 4 model B, using a mpu 6050 modual for gyroscope and accelerometer mesurements.
 
