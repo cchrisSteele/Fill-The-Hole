@@ -12,11 +12,9 @@ app = Flask(__name__)
 
 SQL_DIR = Path(__file__).parent
 
-
 @app.get("/api/health")
 def health():
     return jsonify(status="ok"), 200
-
 
 @app.post("/api/create-schema")
 def create_schema():
@@ -25,7 +23,6 @@ def create_schema():
         return jsonify(error="Unauthorized"), 401
 
     return run_sql_file("sql/schema.sql")
-
 
 @app.post("/api/gen_potholes")
 def gen_potholes():
@@ -97,6 +94,29 @@ def new_pothole():
     uid = int(query["response"]["result"]["rows"][0][0]["value"])
     return jsonify(uid=uid, message="Pothole created"), 201
 
+@app.delete("/api/delete_pothole/<uid>")
+def delete_pothole(uid):
+    try:
+        pothole_id = int(uid)
+        if pothole_id <= 0:
+            raise ValueError
+    except ValueError:
+        return jsonify(error="uid must be a positive integer"), 400
+
+    result = execute_sql([
+        f"DELETE FROM potholes WHERE uid = {pothole_id} RETURNING uid;"
+    ])
+
+    query = result["results"][0]
+    if query["type"] == "error":
+        return jsonify(error="Could not delete pothole", details=query), 500
+
+    # A DELETE with RETURNING produces no rows when the ID does not exist.
+    if not query.get("response", {}).get("result", {}).get("rows"):
+        return jsonify(error="Pothole not found"), 404
+
+    return jsonify(message="Pothole deleted", uid=pothole_id), 200
+
 # Helper functions
 
 def run_sql_file(filename):
@@ -118,7 +138,6 @@ def run_sql_file(filename):
 def check_db_creds(key):
     admin_key = os.environ.get("ADMIN_KEY")
     return bool(admin_key) and key == admin_key
-
 
 def read_sql_statements(filename):
     """Read and split a trusted SQL file into complete statements."""
@@ -150,7 +169,6 @@ def read_sql_statements(filename):
         raise ValueError(f"Incomplete statement in {filename}")
 
     return statements
-
 
 def execute_sql(statements):
     """Run SQL statements through Turso's HTTP pipeline."""
