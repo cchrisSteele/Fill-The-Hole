@@ -3,7 +3,6 @@
   justify-content: flex-start;
 }
 
-.create-pothole__trigger,
 .create-pothole__button {
   min-height: 44px;
   padding: 10px 18px;
@@ -16,13 +15,11 @@
   transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.create-pothole__trigger,
 .create-pothole__button--primary {
   color: #fff;
   background: #2255a4;
 }
 
-.create-pothole__trigger:hover,
 .create-pothole__button--primary:hover:not(:disabled) {
   background: #194582;
   box-shadow: var(--shadow);
@@ -107,7 +104,6 @@
 
 .create-pothole__select:focus-visible,
 .create-pothole__button:focus-visible,
-.create-pothole__trigger:focus-visible,
 .create-pothole__close:focus-visible {
   outline: 3px solid var(--accent-border);
   outline-offset: 2px;

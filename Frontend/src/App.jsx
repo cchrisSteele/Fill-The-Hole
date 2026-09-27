@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from "react-router";
-import Banner from "./components/Banner";
-import Navbar from "./components/Navbar";
-import MapPage from "./pages/MapPage";
+import Banner from "./components/banner.jsx";
+import Navbar from "./components/navbar.jsx";
+import Backlog from "./pages/Backlog.jsx";
+import MapPage from "./pages/MapPage.jsx";
 
 export default function App() {
   return (
@@ -11,7 +12,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/map" replace />} />
         <Route path="/map" element={<MapPage />} />
-        {/* Add the /backlog route when BacklogPage exists. */}
+        <Route path="/backlog" element={<Backlog />} />
+        <Route path="*" element={<Navigate to="/map" replace />} />
       </Routes>
 
       <Navbar />

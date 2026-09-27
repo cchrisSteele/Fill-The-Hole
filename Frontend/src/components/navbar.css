@@ -30,7 +30,8 @@
 }
 
 .bottom-nav__link:hover,
-.bottom-nav__link:focus-visible {
+.bottom-nav__link:focus-visible,
+.bottom-nav__link--active {
   background: rgba(255, 255, 255, 0.14);
 }
 

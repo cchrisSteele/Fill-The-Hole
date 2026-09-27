@@ -1,4 +1,4 @@
-import "./Banner.css";
+import "./banner.css";
 
 export default function Banner({
   title = "Fill The Hole",

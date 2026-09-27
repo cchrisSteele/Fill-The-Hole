@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { divIcon } from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import CreatePothole from "../components/createpothole.jsx";
+import CreatePothole from "../components/CreatePothole.jsx";
 import "./MapPage.css";
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/+$/, "");

@@ -1,23 +1,14 @@
 import { useState } from "react";
-import "./createpothole.css";
+import { getUserId } from "../utils/userId.js";
+import "./CreatePothole.css";
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/+$/, "");
-const USER_ID_STORAGE_KEY = "fill-the-hole-user-id";
 const SEVERITY_OPTIONS = [
   { value: 0, label: "Low" },
   { value: 1, label: "Medium" },
   { value: 2, label: "High" },
   { value: 3, label: "Imminent Destruction" },
 ];
-
-function getUserId() {
-  let userId = window.localStorage.getItem(USER_ID_STORAGE_KEY);
-  if (!userId) {
-    userId = window.crypto.randomUUID();
-    window.localStorage.setItem(USER_ID_STORAGE_KEY, userId);
-  }
-  return userId;
-}
 
 async function savePothole({ latitude, longitude, severity }) {
   const userId = getUserId();
@@ -54,21 +45,32 @@ async function savePothole({ latitude, longitude, severity }) {
     throw new Error("Could not connect to the reports service. Check that the backend is running and try again.");
   }
 
+  const responseText = await response.text();
   let result;
   try {
-    result = await response.json();
+    result = JSON.parse(responseText);
   } catch {
+    if (!response.ok) {
+      throw new Error(
+        `The reports service failed with HTTP ${response.status}. Check the Flask server output for the database error.`
+      );
+    }
     throw new Error("The reports service returned an invalid response.");
   }
 
   if (!response.ok) {
-    throw new Error(result?.error || `Could not save the pothole report (${response.status}).`);
+    throw new Error(
+      result?.error
+        ? `${result.error} (HTTP ${response.status})`
+        : `Could not save the pothole report (HTTP ${response.status}).`
+    );
   }
   if (!Number.isInteger(Number(result?.uid)) || Number(result.uid) <= 0) {
     throw new Error("The reports service did not return the saved pothole ID.");
   }
 
   return {
+    user_id: payload.user_id,
     latitude: payload.latitude,
     longitude: payload.longitude,
     severity: payload.severity,
@@ -123,18 +125,6 @@ export default function CreatePothole({
 
   return (
     <div className="create-pothole">
-      <button
-        className="create-pothole__trigger"
-        type="button"
-        onClick={() => {
-          onCancelManualLocation();
-          setError("");
-          setStep("confirm");
-        }}
-      >
-        Report Pothole
-      </button>
-
       {isPickingLocation && (
         <div className="create-pothole__map-instruction" role="status">
           <span>Click the map to choose the pothole location.</span>

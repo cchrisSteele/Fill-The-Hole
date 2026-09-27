@@ -1,19 +1,23 @@
-import "./Navbar.css";
+import { NavLink } from "react-router";
+import "./navbar.css";
 
 export default function Navbar() {
   return (
     <nav className="bottom-nav" aria-label="Main navigation">
-      <a className="bottom-nav__link" href="/map" aria-current="page">
+      <NavLink
+        className={({ isActive }) => `bottom-nav__link${isActive ? " bottom-nav__link--active" : ""}`}
+        to="/map"
+      >
         <span className="bottom-nav__icon" aria-hidden="true">⌖</span>
         <span>Map</span>
-      </a>
-
-      {/* Enable this section when the Backlog page and route are ready.
-      <a className="bottom-nav__link" href="/backlog">
+      </NavLink>
+      <NavLink
+        className={({ isActive }) => `bottom-nav__link${isActive ? " bottom-nav__link--active" : ""}`}
+        to="/backlog"
+      >
         <span className="bottom-nav__icon" aria-hidden="true">☷</span>
         <span>Backlog</span>
-      </a>
-      */}
+      </NavLink>
     </nav>
   );
 }

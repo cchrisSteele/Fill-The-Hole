@@ -81,8 +81,8 @@ def new_pothole():
         """,
         "args": [
             {"type": "text", "value": user_id.strip()},
-            {"type": "float", "value": str(latitude)},
-            {"type": "float", "value": str(longitude)},
+            {"type": "float", "value": latitude},
+            {"type": "float", "value": longitude},
             {"type": "integer", "value": str(severity)},
         ],
     }])
@@ -177,9 +177,21 @@ def execute_sql(statements):
         "turso://", "https://", 1
     ).rstrip("/")
 
+    requests = []
+    for statement in statements:
+        if isinstance(statement, str):
+            stmt = {"sql": statement}
+        elif isinstance(statement, dict) and isinstance(statement.get("sql"), str):
+            stmt = {"sql": statement["sql"]}
+            if "args" in statement:
+                stmt["args"] = statement["args"]
+        else:
+            raise ValueError("Each SQL statement must be a string or a statement with SQL text.")
+        requests.append({"type": "execute", "stmt": stmt})
+
     payload = {
         "requests": [
-            *[{"type": "execute", "stmt": {"sql": sql}} for sql in statements],
+            *requests,
             {"type": "close"},
         ]
     }
