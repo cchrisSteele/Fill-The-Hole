@@ -48,3 +48,8 @@ Raspberry PI 4 model B, using a mpu 6050 modual for gyroscope and accelerometer 
 Shock - Baseline = Real Shock Data
 
 Calibration Period is to find a Shock baseline
+
+<img width="414" height="606" alt="image" src="https://github.com/user-attachments/assets/261e492d-86ed-48d1-8dcd-3de4b1dffadb" />
+
+Pythong Code for the raspberry pi to detect impact: 
+https://github.com/jenfoxbot/ImpactForceMonitor/blob/afecca19628f07259b1f4f6482eeb02f7105bc94/PythonProgram.py
