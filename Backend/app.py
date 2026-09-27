@@ -18,13 +18,42 @@ def health():
     return jsonify(status="ok"), 200
 
 
-@app.post("/api/admin/create-schema")
+@app.post("/api/create-schema")
 def create_schema():
     # check creds
     if not check_db_creds(request.headers.get("X-Admin-Key")):
         return jsonify(error="Unauthorized"), 401
 
-    return run_sql_file("schema.sql")
+    return run_sql_file("sql/schema.sql")
+
+
+@app.post("/api/gen_potholes")
+def gen_potholes():
+    if not check_db_creds(request.headers.get("X-Admin-Key")):
+            return jsonify(error="Unauthorized"), 401
+    
+    return run_sql_file("sql/gen_potholes.sql")
+
+@app.get("/api/print_potholes")
+def get_all_potholes():
+    result = execute_sql(["SELECT * FROM potholes ORDER BY uid;"])
+    query = result["results"][0]
+
+    if query["type"] == "error":
+        return jsonify(error="Database query failed"), 500
+
+    data = query["response"]["result"]
+    columns = [column["name"] for column in data["cols"]]
+
+    potholes = [
+        {
+            name: cell.get("value")
+            for name, cell in zip(columns, row)
+        }
+        for row in data["rows"]
+    ]
+
+    return jsonify(potholes=potholes), 200
 
 
 # Helper functions
