@@ -14,6 +14,11 @@ Our app will ask the user to input their personal info (name, phone no, and emai
 # FrontEnd
 React.js Framework
 
+The frontend is organized by responsibility under `Frontend/src`:
+- `pages/` contains the map, backlog, and profile screens.
+- `components/` contains reusable map, search, navigation, and report-dialog UI.
+- `services/` and `utils/` contain location search and shared report formatting.
+- `styles/` contains the app's layout, page, map, and responsive stylesheets; `App.css` imports them in cascade order.
 
 # Backend
 The backend of the appication is a Python Flask server.
