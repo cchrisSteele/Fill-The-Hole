@@ -1,0 +1,202 @@
+.nearby-section {
+  margin-top: 30px;
+}
+
+.nearby-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 13px;
+}
+
+.nearby-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 5px 0 0;
+  color: #35483d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.nearby-heading h2 span {
+  display: inline-grid;
+  min-width: 21px;
+  height: 21px;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 11px;
+  color: #617668;
+  background: #eaf0e9;
+  font-size: 10px;
+}
+
+.confirm-instruction {
+  color: #849087;
+  font-size: 11px;
+}
+
+.report-list {
+  display: grid;
+  gap: 9px;
+}
+
+.report-item {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border: 1px solid #e5e9e3;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.report-severity {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border: 3px solid #fae7da;
+  border-radius: 50%;
+  background: #df8656;
+  box-sizing: content-box;
+}
+
+.report-severity.severity-2,
+.report-severity.severity-3 {
+  border-color: #f6deda;
+  background: #c94f3e;
+}
+
+.report-severity.severity-0 {
+  border-color: #e3eddf;
+  background: #7d9a6d;
+}
+
+.report-severity.severity-1 {
+  border-color: #fae7da;
+  background: #df8656;
+}
+
+.report-copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 3px;
+}
+
+.report-copy strong,
+.report-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.report-copy strong {
+  color: #35483d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.report-copy span {
+  color: #89948c;
+  font-size: 10px;
+}
+
+.report-copy small {
+  color: #a0a9a1;
+  font-size: 9px;
+  text-transform: capitalize;
+}
+
+.confirm-hit {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #dce6dc;
+  border-radius: 9px;
+  color: #46624e;
+  background: #f4f7f3;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-hit:hover:not(:disabled) {
+  border-color: #b8cdbb;
+  background: #eaf1e9;
+}
+
+.confirm-hit:disabled {
+  border-color: #e0e9df;
+  color: #68816b;
+  background: #edf4eb;
+  cursor: default;
+}
+
+.reports-empty {
+  display: flex;
+  min-height: 94px;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 18px;
+  border: 1px solid #e5e9e3;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.reports-empty .empty-page-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border-radius: 12px;
+}
+
+.reports-empty > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.reports-empty strong {
+  color: #415247;
+  font-size: 12px;
+}
+
+.reports-empty p {
+  margin: 3px 0 0;
+  color: #89948c;
+  font-size: 10px;
+}
+
+.text-action {
+  flex: 0 0 auto;
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 8px;
+  color: #46624e;
+  background: #edf3ed;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.text-action:hover {
+  background: #e2ece1;
+}
+
+.confirmed-badge {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #5d7a60;
+  background: #edf4eb;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pothole-list-icon {
+  color: #d16a4d;
+  background: #fff0e9;
+}
+

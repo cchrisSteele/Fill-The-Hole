@@ -1,0 +1,88 @@
+.footer-pin {
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  color: #d96d57;
+  background: #fff0ec;
+}
+
+.footer-pin.muted {
+  color: #74867a;
+  background: #f0f3ef;
+}
+
+.footer-pin svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer-location {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 3px;
+}
+
+.footer-location strong,
+.footer-location span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer-location strong {
+  color: #415247;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.footer-location span {
+  color: #8a958d;
+  font-size: 10px;
+}
+
+.selected-label {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  color: #6d8072;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.65px;
+}
+
+.selected-label > span {
+  width: 6px;
+  height: 6px;
+  background: #e8856d;
+}
+
+.ready-label > span {
+  background: #74a17f;
+}
+
+.page-footnote {
+  margin: 18px 0 0;
+  color: #9aa49c;
+  font-size: 10px;
+  text-align: center;
+}
+
+.page-footnote span {
+  padding-left: 3px;
+  color: #81a18a;
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+

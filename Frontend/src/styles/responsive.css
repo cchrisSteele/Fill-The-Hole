@@ -1,0 +1,165 @@
+@media (max-width: 700px) {
+  .topbar {
+    height: 62px;
+    padding: 0 20px;
+  }
+
+  .topbar-note {
+    display: none;
+  }
+
+  .workspace {
+    width: calc(100% - 36px);
+    padding-top: 38px;
+  }
+
+  .bottom-nav {
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: calc(100% - 36px);
+    margin-bottom: 10px;
+  }
+
+  .intro {
+    align-items: flex-start;
+    margin-bottom: 22px;
+  }
+
+  .intro h1 {
+    font-size: 32px;
+    letter-spacing: -1.2px;
+  }
+
+  .intro-copy {
+    max-width: 300px;
+    font-size: 13px;
+  }
+
+  .location-badge {
+    display: none;
+  }
+
+  .search-area {
+    margin-bottom: 16px;
+  }
+
+  .search-form {
+    min-height: 58px;
+    gap: 9px;
+    padding-left: 14px;
+  }
+
+  .search-form input {
+    font-size: 12px;
+  }
+
+  .search-button {
+    min-width: 44px;
+    width: 44px;
+    height: 42px;
+    padding: 0;
+  }
+
+  .search-button span:not(.button-spinner) {
+    display: none;
+  }
+
+  .map-heading {
+    min-height: 68px;
+    padding: 0 14px;
+  }
+
+  .map-heading-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .map-hint {
+    font-size: 10px;
+  }
+
+  .hint-desktop {
+    display: none;
+  }
+
+  .hint-mobile {
+    display: inline;
+  }
+
+  .map-frame {
+    height: min(64vh, 480px);
+    min-height: 330px;
+  }
+
+  .map-footer {
+    min-height: 68px;
+    gap: 9px;
+    padding: 10px 12px;
+  }
+
+  .save-location {
+    max-width: 105px;
+    min-height: 36px;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+
+  .backlog-item {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .backlog-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .backlog-column {
+    padding: 12px;
+  }
+
+  .backlog-copy {
+    flex-basis: calc(100% - 54px);
+  }
+
+  .backlog-view {
+    margin-left: 50px;
+  }
+
+  .page-count {
+    margin-top: 3px;
+    font-size: 8px;
+  }
+
+  .profile-card,
+  .profile-stat {
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .selected-label {
+    font-size: 0;
+  }
+
+  .selected-label > span {
+    width: 7px;
+    height: 7px;
+  }
+}
+
+@media (max-width: 380px) {
+  .workspace {
+    width: calc(100% - 24px);
+  }
+
+  .map-hint {
+    max-width: 105px;
+    text-align: right;
+    white-space: normal;
+  }
+
+  .map-empty-state {
+    padding: 12px 14px;
+    font-size: 11px;
+  }
+}
