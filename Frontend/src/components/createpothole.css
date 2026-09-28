@@ -1,0 +1,302 @@
+.create-pothole {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.create-pothole__button {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.create-pothole__button--primary {
+  color: #fff;
+  background: #2255a4;
+}
+
+.create-pothole__button--primary:hover:not(:disabled) {
+  background: #194582;
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.create-pothole__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(8 6 13 / 55%);
+}
+
+.create-pothole__dialog {
+  position: relative;
+  width: min(100%, 440px);
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.create-pothole__dialog h2 {
+  max-width: calc(100% - 30px);
+  margin: 0 0 8px;
+  color: var(--text-h);
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.create-pothole__description {
+  margin: 0 0 20px;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.create-pothole__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  color: var(--text);
+  background: transparent;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.create-pothole__close:hover:not(:disabled) {
+  background: var(--social-bg);
+}
+
+.create-pothole__label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--text-h);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.create-pothole__select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-h);
+  background: var(--bg);
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+.create-pothole__select:focus-visible,
+.create-pothole__button:focus-visible,
+.create-pothole__close:focus-visible {
+  outline: 3px solid var(--accent-border);
+  outline-offset: 2px;
+}
+
+.create-pothole__error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #e7b8b4;
+  border-radius: 8px;
+  color: #9e2923;
+  background: #fff5f4;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.create-pothole__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.create-pothole__button--secondary {
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  background: var(--social-bg);
+}
+
+.create-pothole__button--secondary:hover:not(:disabled) {
+  background: var(--code-bg);
+}
+
+.create-pothole__button--manual {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  background: var(--social-bg);
+}
+
+.create-pothole__button--manual:hover:not(:disabled) {
+  background: var(--code-bg);
+}
+
+.create-pothole__map-instruction {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-h);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  font-size: 0.9rem;
+}
+
+.create-pothole__instruction-cancel {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-h);
+  background: var(--social-bg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.create-pothole__instruction-cancel:hover {
+  background: var(--code-bg);
+}
+
+.create-pothole__button:disabled,
+.create-pothole__close:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.pothole-marker-icon {
+  border: 0;
+  background: transparent;
+}
+
+.pothole-marker {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 52px;
+}
+
+.pothole-droplet {
+  position: absolute;
+  top: 14px;
+  left: 6px;
+  z-index: 1;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background: #2255a4;
+  box-shadow: 0 2px 7px rgb(8 6 13 / 35%);
+  transform: rotate(-45deg);
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.pothole-droplet__center {
+  width: 8px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.pothole-marker--preview .pothole-droplet {
+  background: #2255a4;
+}
+
+.pothole-marker--severity-0 .pothole-droplet {
+  background: #16a34a;
+}
+
+.pothole-marker--severity-1 .pothole-droplet {
+  background: #eab308;
+}
+
+.pothole-marker--severity-2 .pothole-droplet {
+  background: #fb923c;
+}
+
+.pothole-marker--severity-3 .pothole-droplet {
+  background: #b91c1c;
+  box-shadow: 0 2px 8px rgb(127 29 29 / 55%);
+}
+
+.pothole-marker--severity-3 .pothole-droplet__center {
+  background: #facc15;
+}
+
+.pothole-marker__flame {
+  position: absolute;
+  top: 11px;
+  left: 3px;
+  z-index: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(145deg, #fff7ae 4%, #facc15 30%, #f97316 64%, #dc2626 100%);
+  filter: blur(1px);
+  transform: rotate(-45deg) scale(1.2);
+  transform-origin: center;
+  animation: pothole-flame-flicker 850ms ease-in-out infinite alternate;
+}
+
+@keyframes pothole-flame-flicker {
+  from { transform: rotate(-45deg) scale(1.16); }
+  to { transform: rotate(-45deg) scale(1.24); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pothole-marker__flame {
+    animation: none;
+  }
+}
+
+.pothole-popup {
+  display: grid;
+  gap: 5px;
+  min-width: 165px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+}
+
+.pothole-popup strong {
+  color: var(--text-h);
+}
+
+@media (max-width: 480px) {
+  .create-pothole__dialog {
+    padding: 24px 20px;
+  }
+
+  .create-pothole__actions {
+    flex-direction: column-reverse;
+  }
+
+  .create-pothole__button {
+    width: 100%;
+  }
+}

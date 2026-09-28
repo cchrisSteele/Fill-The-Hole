@@ -1,0 +1,27 @@
+.site-banner {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.25rem clamp(1rem, 4vw, 3rem);
+  color: #ffffff;
+  background: #172554;
+  border-bottom: 4px solid #facc15;
+}
+
+.site-banner__content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.site-banner__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.site-banner__subtitle {
+  margin: 0.4rem 0 0;
+  color: #dbeafe;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.5;
+}

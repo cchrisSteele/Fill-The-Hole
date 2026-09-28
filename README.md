@@ -2,14 +2,15 @@
 UMBC Hackathon 26'
 
 # About the project
-(Be sure to write what inspired you, what you learned, how you built your project, and the challenges you faced. Format your story in Markdown, with LaTeX support for math.)
+Our application automatically detects when a user drives over a pothole and records its location. Based on the user’s preferences, it can either prompt them to report the pothole immediately or wait until they are safely stopped.
 
-The system will be initially be centered around/launched in Baltimore city and then will be further wokred to be compatible with other jurisdiction in Maryland then other states.  
+The application then streamlines the reporting process for Baltimore City’s 311 system (https://balt311.baltimorecity.gov/citizen/s/). Normally, residents first need to find Baltimore City’s 311 website, then find the pothole section hidden under the Street tab, and then manually submit a report. Our app removes that friction.
 
-The data collected will be sent to: https://balt311.baltimorecity.gov/citizen/s/
-Normally the user will need to manually submit the report but user has to initially find the pothole section which is hidden under the street tab. The system further more asks the user to input the picture of the pothole/any documentation associated with the pothole (if available), exact location of the pothole, where the pothole is located (Street, Alley, Footway, Curb), Is the problem due to a water meter, valve, manhole or steel plate?, and How can they reach you? (need to include personal info: name, phone no, and email) 
-
-Our app will ask the user to input their personal info (name, phone no, and email), we can give the user option to input "If the problem was due to a water meter, valve, manhole or steel plate?" and then auto fill the form using the collected and send the report to Baltimore City Administration. 
+When the user initially loads the application for the first time, they will be prompted to enter their personal information (name, phone number, and email). Every time the user drives over a pothole, they can indicate whether the problem involves a water meter, valve, manhole, or steel plate. The application then uses the collected data to auto-fill the form with the required information and submit the report to Baltimore City Administration. The collected data includes:
+- The exact location of the pothole
+- The pothole location type: Street, Alley, Footway, or Curb
+- Whether the issue is caused by a water meter, valve, manhole, or steel plate
+- Contact information: name, phone number, and email
  
 # FrontEnd
 React.js Framework
@@ -41,6 +42,8 @@ Sqlite database for pothole reccords.
 Hosted on Turso.
 
 
+
+
 # Hardware
 Raspberry PI 4 model B, using a mpu 6050 modual for gyroscope and accelerometer mesurements.
 
@@ -48,59 +51,9 @@ Shock - Baseline = Real Shock Data
 
 Calibration Period is to find a Shock baseline
 
+The Hardware.py code in the Hardware dir is the translator for the mpu6050 fr the raspberry pi
 
-# Setup instructions
+<img width="414" height="606" alt="image" src="https://github.com/user-attachments/assets/261e492d-86ed-48d1-8dcd-3de4b1dffadb" />
 
-TBD
-
-⠀⠀⠀⠀⠀⠀⣤⣶⣶
-⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣀⣀
-⠀⠀⠀⠀⠀⣀⣶⣿⣿⣿⣿⣿⣿
-⣤⣶⣀⠿⠶⣿⣿⣿⠿⣿⣿⣿⣿
-⠉⠿⣿⣿⠿⠛⠉⠀⣿⣿⣿⣿⣿
-⠀⠀⠉⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣤⣤
-⠀⠀⠀⠀⠀⠀⠀⣤⣶⣿⣿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⣀⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿
-⠀⠀⠀⠀⣀⣿⣿⣿⠿⠉⠀⠀⣿⣿⣿⣿
-⠀⠀⠀⠀⣿⣿⠿⠉⠀⠀⠀⠀⠿⣿⣿⠛
-⠀⠀⠀⠀⠛⣿⣿⣀⠀⠀⠀⠀⠀⣿⣿⣀
-⠀⠀⠀⠀⠀⣿⣿⣿⠀⠀⠀⠀⠀⠿⣿⣿
-⠀⠀⠀⠀⠀⠉⣿⣿⠀⠀⠀⠀⠀⠀⠉⣿
-⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⣀⣿
-⠀⠀⠀⠀⠀⠀⣀⣿⣿
-⠀⠀⠀⠀⠤⣿⠿⠿⠿ ⠀⠀⠀⠀⣀
-⠀⠀⣶⣿⠿⠀⠀⠀⣀⠀⣤⣤
-⠀⣶⣿⠀⠀⠀⠀⣿⣿⣿⠛⠛⠿⣤⣀
-⣶⣿⣤⣤⣤⣤⣤⣿⣿⣿⣀⣤⣶⣭⣿⣶⣀
-⠉⠉⠉⠛⠛⠿⣿⣿⣿⣿⣿⣿⣿⠛⠛⠿⠿
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿
-⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠀⣭⣿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⣤⣿⣿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠿
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿
-⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⠛⠿⣿⣤
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⠀⠀⠀⣿⣿⣤
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⣶⣿⠛⠉
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿
-⠀⠀⣶⠀⠀⣀⣤⣶⣤⣉⣿⣿⣤⣀
-⠤⣤⣿⣤⣿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣀
-⠀⠛⠿⠀⠀⠀⠀⠉⣿⣿⣿⣿⣿⠉⠛⠿⣿⣤
-⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⣿⠛⠀⠀⠀⣶⠿
-⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⣿⣿⣿⣤⠀⣿⠿
-⠀⠀⠀⠀⠀⠀⠀⣶⣿⣿⣿⣿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⣿⣿⣿⠿⠉⠉
-⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿⠿
-⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠉
-⠀⠀⠀⠀⠀⠀⠀⠀⣛⣿⣭⣶⣀
-⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠉⠛⣿
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⣿⣿
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣉⠀⣶⠿
-⠀⠀⠀⠀⠀⠀⠀⠀⣶⣿⠿
-⠀⠀⠀⠀⠀⠀⠀⠛⠿⠛
-
+Pythong Code for the raspberry pi to detect impact: 
+https://github.com/jenfoxbot/ImpactForceMonitor/blob/afecca19628f07259b1f4f6482eeb02f7105bc94/PythonProgram.py
